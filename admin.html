@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSJ Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#f8f4ec; --ivory-2:#f1eadb; --paper:#ffffff; --ink:#26201a; --ink-soft:#6b6154;
+  --line:#e5dcc9; --gold:#b9822f; --gold-dark:#8f6220; --maroon:#6d2a2a; --sage:#7c8a68;
+  --shadow:0 10px 26px rgba(38,32,26,0.08);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--ivory); color:var(--ink); font-family:'Work Sans',sans-serif; line-height:1.5;}
+h1,h2,h3{font-family:'Fraunces',serif;}
+button{cursor:pointer; font-family:inherit;}
+input, select, textarea{font-family:inherit;}
+
+/* ---------- Login ---------- */
+#loginScreen{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.login-box{
+  background:var(--paper); border:1px solid var(--line); padding:40px 36px; width:380px; max-width:100%;
+  box-shadow:var(--shadow);
+}
+.login-box h1{font-size:26px; margin-bottom:4px;}
+.login-box .sub{color:var(--ink-soft); font-size:13px; margin-bottom:26px;}
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:7px;}
+.field input{width:100%; border:1px solid var(--line); padding:11px 13px; font-size:14px; background:var(--ivory);}
+.field input:focus{outline:none; border-color:var(--gold);}
+.btn{
+  border:none; padding:12px 22px; font-size:13px; font-weight:700; letter-spacing:0.05em;
+  text-transform:uppercase; transition:transform .15s, opacity .15s;
+}
+.btn-gold{background:var(--gold); color:#fff;}
+.btn-gold:hover{transform:translateY(-1px);}
+.btn-gold:disabled{opacity:0.6; cursor:not-allowed; transform:none;}
+.btn-outline{background:transparent; border:1px solid var(--line); color:var(--ink);}
+.btn-outline:hover{border-color:var(--ink);}
+.btn-danger{background:var(--maroon); color:#fff;}
+.btn-full{width:100%;}
+.error-msg{color:var(--maroon); font-size:12.5px; margin-top:10px; display:none;}
+
+/* ---------- Dashboard shell ---------- */
+#dashboard{display:none;}
+.admin-header{
+  background:var(--paper); border-bottom:1px solid var(--line); padding:16px 26px;
+  display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:20;
+}
+.admin-header .brand{font-family:'Fraunces',serif; font-weight:700; font-size:20px;}
+.admin-header .brand span{color:var(--gold-dark); font-size:12px; font-weight:600; margin-left:8px; font-family:'Work Sans';}
+.admin-header .who{font-size:12.5px; color:var(--ink-soft); margin-right:14px;}
+.admin-body{display:flex; min-height:calc(100vh - 61px);}
+.sidebar{
+  width:200px; background:var(--paper); border-right:1px solid var(--line); padding:20px 0; flex-shrink:0;
+}
+.sidebar button{
+  display:block; width:100%; text-align:left; padding:13px 22px; background:none; border:none;
+  font-size:13.5px; color:var(--ink-soft); font-weight:600; border-left:3px solid transparent;
+}
+.sidebar button.active{color:var(--gold-dark); border-left-color:var(--gold); background:var(--ivory-2);}
+.main-panel{flex:1; padding:28px 32px; max-width:1100px;}
+.panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;}
+.panel-head h2{font-size:24px;}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed; top:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:10px;
+}
+.toast-msg{
+  padding:13px 20px; font-size:13px; font-weight:600; box-shadow:var(--shadow); min-width:240px;
+  animation:slideIn .25s ease;
+}
+.toast-msg.success{background:var(--sage); color:#fff;}
+.toast-msg.error{background:var(--maroon); color:#fff;}
+@keyframes slideIn{from{transform:translateX(30px); opacity:0;} to{transform:translateX(0); opacity:1;}}
+
+/* ---------- Product table/cards ---------- */
+.product-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px;}
+.p-card{background:var(--paper); border:1px solid var(--line); overflow:hidden; position:relative;}
+.p-card img{width:100%; height:150px; object-fit:cover; display:block; background:var(--ivory-2);}
+.p-card .p-body{padding:14px;}
+.p-card .p-name{font-weight:700; font-size:14px; margin-bottom:4px;}
+.p-card .p-meta{font-size:12px; color:var(--ink-soft); margin-bottom:10px;}
+.p-card .p-actions{display:flex; gap:8px;}
+.p-card .p-actions button{flex:1; padding:8px; font-size:11px; font-weight:700; letter-spacing:0.03em; border:1px solid var(--line); background:transparent;}
+.p-card .p-actions button:hover{border-color:var(--gold); color:var(--gold-dark);}
+.status-pill{
+  position:absolute; top:10px; left:10px; font-size:10px; font-weight:700; letter-spacing:0.05em;
+  padding:4px 9px; text-transform:uppercase; color:#fff;
+}
+.status-pill.on{background:var(--sage);}
+.status-pill.off{background:var(--ink-soft);}
+
+/* ---------- Modal (Add/Edit product & settings) ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(38,32,26,0.55); display:none; align-items:center; justify-content:center;
+  z-index:150; padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--paper); width:560px; max-width:100%; max-height:92vh; overflow-y:auto; padding:30px;}
+.modal h3{font-size:20px; margin-bottom:20px;}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.field textarea{width:100%; border:1px solid var(--line); padding:11px 13px; font-size:14px; background:var(--ivory); resize:vertical;}
+.field select{width:100%; border:1px solid var(--line); padding:11px 13px; font-size:14px; background:var(--ivory);}
+.checkbox-row{display:flex; align-items:center; gap:8px; font-size:13.5px; margin-bottom:16px;}
+.img-preview-row{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+.img-preview-row img{width:70px; height:84px; object-fit:cover; border:1px solid var(--line); background:var(--ivory-2);}
+.modal-actions{display:flex; gap:10px; margin-top:22px; justify-content:flex-end;}
+.spinner{
+  width:14px; height:14px; border:2px solid rgba(255,255,255,0.5); border-top-color:#fff; border-radius:50%;
+  display:inline-block; animation:spin .7s linear infinite; margin-right:6px; vertical-align:-2px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media(max-width:760px){
+  .admin-body{flex-direction:column;}
+  .sidebar{width:100%; display:flex; overflow-x:auto; padding:0;}
+  .sidebar button{width:auto; white-space:nowrap; border-left:none; border-bottom:3px solid transparent;}
+  .sidebar button.active{border-left:none; border-bottom-color:var(--gold);}
+  .main-panel{padding:20px;}
+  .two-col{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>CSJ Admin</h1>
+    <div class="sub">Sign in to manage products and site content</div>
+    <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="admin@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+    <button class="btn btn-gold btn-full" id="loginBtn" onclick="doLogin()">Sign In</button>
+    <div class="error-msg" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard">
+  <div class="admin-header">
+    <div class="brand">CSJ <span>ADMIN PANEL</span></div>
+    <div style="display:flex; align-items:center;">
+      <span class="who" id="whoAmI"></span>
+      <button class="btn btn-outline" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+  <div class="admin-body">
+    <div class="sidebar">
+      <button class="active" data-tab="products" onclick="switchTab('products', this)">Products</button>
+      <button data-tab="settings" onclick="switchTab('settings', this)">Website Settings</button>
+    </div>
+
+    <div class="main-panel">
+
+      <!-- PRODUCTS TAB -->
+      <div id="tab-products">
+        <div class="panel-head">
+          <h2>Products</h2>
+          <button class="btn btn-gold" onclick="openProductModal()">+ Add Product</button>
+        </div>
+        <div id="productGridAdmin" class="product-grid">
+          <p style="color:var(--ink-soft); font-size:13px;">Loading products…</p>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" style="display:none;">
+        <div class="panel-head"><h2>Website Settings</h2></div>
+        <div style="background:var(--paper); border:1px solid var(--line); padding:26px; max-width:600px;">
+          <div class="field"><label>Hero Heading</label><input type="text" id="setHeroHeading"></div>
+          <div class="field"><label>Hero Subtitle</label><textarea id="setHeroSubtitle" rows="2"></textarea></div>
+          <div class="field">
+            <label>Hero Image Path (from your images/ folder)</label>
+            <div class="img-preview-row">
+              <img id="setHeroImgPreview" src="" alt="">
+              <input type="text" id="setHeroImgPath" placeholder="images/csj-2.jpg" oninput="document.getElementById('setHeroImgPreview').src=this.value" style="flex:1;">
+            </div>
+          </div>
+          <div class="field"><label>About Text (Paragraph 1)</label><textarea id="setAboutText1" rows="2"></textarea></div>
+          <div class="field"><label>About Text (Paragraph 2)</label><textarea id="setAboutText2" rows="2"></textarea></div>
+          <div class="field">
+            <label>About Image Path (from your images/ folder)</label>
+            <div class="img-preview-row">
+              <img id="setAboutImgPreview" src="" alt="">
+              <input type="text" id="setAboutImgPath" placeholder="images/csj-5.jpg" oninput="document.getElementById('setAboutImgPreview').src=this.value" style="flex:1;">
+            </div>
+          </div>
+          <div class="field"><label>WhatsApp Order Number</label><input type="text" id="setWhatsapp" placeholder="923227707172"></div>
+          <button class="btn btn-gold" id="saveSettingsBtn" onclick="saveSiteSettings()">Save Settings</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ PRODUCT MODAL ============ -->
+<div class="modal-overlay" id="productModalOverlay">
+  <div class="modal">
+    <h3 id="productModalTitle">Add Product</h3>
+    <input type="hidden" id="pId">
+    <div class="img-preview-row">
+      <img id="pImgPreview" src="" alt="">
+      <div class="field" style="flex:1; margin-bottom:0;">
+        <label>Image Path (from your images/ folder)</label>
+        <input type="text" id="pImgPath" placeholder="images/csj-1.jpg" oninput="document.getElementById('pImgPreview').src=this.value">
+      </div>
+    </div>
+    <div class="field"><label>Product Name</label><input type="text" id="pName"></div>
+    <div class="two-col">
+      <div class="field"><label>Price (Rs.)</label><input type="number" id="pPrice"></div>
+      <div class="field"><label>Old Price (optional)</label><input type="number" id="pOldPrice"></div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label>Category</label>
+        <select id="pCategory"><option>Signature</option><option>Premium</option><option>Value</option></select>
+      </div>
+      <div class="field">
+        <label>Tag</label>
+        <select id="pTag"><option value="">None</option><option value="New">New</option><option value="Best Seller">Best Seller</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Description</label><textarea id="pDesc" rows="3"></textarea></div>
+    <div class="field"><label>Colors (comma-separated, e.g. Wine Maroon, Navy Blue)</label><input type="text" id="pColors"></div>
+    <div class="two-col">
+      <div class="field"><label>Display Order</label><input type="number" id="pOrder"></div>
+      <div class="field" style="display:flex; align-items:flex-end;">
+        <label class="checkbox-row" style="margin-bottom:11px;"><input type="checkbox" id="pActive" checked> Active (visible on site)</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-gold" id="saveProductBtn" onclick="saveProduct()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
