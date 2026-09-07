@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+window.FALLBACK_IMG = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="480"><rect width="100%" height="100%" fill="#f1eadb"/><text x="50%" y="48%" font-family="sans-serif" font-size="16" fill="#8f6220" text-anchor="middle">CSJ</text><text x="50%" y="56%" font-family="sans-serif" font-size="11" fill="#6b6154" text-anchor="middle">Image unavailable</text></svg>');
+window.imgFallback = function(el){ if(!el) return; el.onerror=null; el.src=window.FALLBACK_IMG; };
+if (typeof window.imgFallback !== "function") { window.imgFallback = function(el){ if(el){ el.onerror=null; el.src=window.FALLBACK_IMG; } }; }
+var imgFallback = window.imgFallback;
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CSJ — Chotty Shah Jee | Premium Unstitched Suiting</title>
@@ -443,7 +450,7 @@ footer{background:var(--ink); color:var(--ivory); padding:60px 0 0;}
       </div>
     </div>
     <div class="hero-frame">
-      <img id="heroImage" src="images/csj-2.jpg" alt="CSJ unstitched suiting collection" onerror="imgFallback(this)">
+      <img id="heroImage" src="images/csj-2.jpg" alt="CSJ unstitched suiting collection" onerror="window.imgFallback(this)">
       <div class="hero-ribbon">CSJ · Signature Box</div>
     </div>
   </div>
@@ -482,7 +489,7 @@ footer{background:var(--ink); color:var(--ivory); padding:60px 0 0;}
 
   <section class="about-section" id="aboutSection">
     <div class="wrap about-grid">
-      <img id="aboutImage" src="images/csj-5.jpg" alt="About CSJ" onerror="imgFallback(this)">
+      <img id="aboutImage" src="images/csj-5.jpg" alt="About CSJ" onerror="window.imgFallback(this)">
       <div class="about-copy">
         <span class="eyebrow">About Us</span>
         <h2>CSJ — Chotty Shah Jee</h2>
@@ -568,7 +575,7 @@ footer{background:var(--ink); color:var(--ivory); padding:60px 0 0;}
     <div class="breadcrumb"><a onclick="showView('home')">Home</a> / <a onclick="showView('shop')">Shop</a> / <span id="pdBreadName"></span></div>
     <div class="pd-grid">
       <div>
-        <img class="pd-main-img" id="pdMainImg" src="" alt="" onerror="imgFallback(this)">
+        <img class="pd-main-img" id="pdMainImg" src="" alt="" onerror="window.imgFallback(this)">
         <div class="pd-thumbs" id="pdThumbs"></div>
       </div>
       <div>
@@ -822,21 +829,6 @@ let pdQtyVal = 1;
 /* ---------------- Rendering helpers ---------------- */
 function fmt(n){ return "Rs. " + n.toLocaleString(); }
 
-// Global image fallback.
-// Use window.* so inline HTML onerror="imgFallback(this)" can always find it.
-window.FALLBACK_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(`
-  <svg xmlns="http://www.w3.org/2000/svg" width="400" height="480">
-    <rect width="100%" height="100%" fill="#f1eadb"/>
-    <text x="50%" y="48%" font-family="sans-serif" font-size="16" fill="#8f6220" text-anchor="middle">CSJ</text>
-    <text x="50%" y="56%" font-family="sans-serif" font-size="11" fill="#6b6154" text-anchor="middle">Image unavailable</text>
-  </svg>`);
-
-window.imgFallback = function(el){
-  if(!el) return;
-  el.onerror = null;
-  el.src = window.FALLBACK_IMG;
-};
-
 function getProductById(id){
   return products.find(x => String(x.id) === String(id));
 }
@@ -850,31 +842,47 @@ function safeColors(product){
 function productCard(p){
   if(!p) return '';
   const wished = wishlist.has(String(p.id));
-  const pid = JSON.stringify(p.id);
+  const safeId = String(p.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const colors = safeColors(p);
   return `
-  <div class="card">
-    <div class="card-media" onclick="openProduct(${pid})">
-      <img src="${p.img}" alt="${p.name}" onerror="imgFallback(this)">
+  <div class="card" data-product-id="${safeId}">
+    <div class="card-media product-open">
+      <img src="${p.img}" alt="${p.name}" onerror="window.imgFallback(this)">
       ${p.tag ? `<div class="card-tag">${p.tag}</div>` : ''}
-      <button class="wish-btn ${wished?'active':''}" onclick="event.stopPropagation(); toggleWish(${pid}, this)">
+      <button class="wish-btn ${wished?'active':''} product-wish" type="button">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.8-10-9.5C0.3 7.8 2.5 4 6.2 4c2.1 0 3.7 1.2 4.8 2.9C12.1 5.2 13.7 4 15.8 4 19.5 4 21.7 7.8 20 11.5 19.5 15.7 12 21 12 21z"/></svg>
       </button>
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
-      <div class="card-title" onclick="openProduct(${pid})">${p.name}</div>
+      <div class="card-title product-open">${p.name}</div>
       <div class="swatch-row">${colors.map(c=>`<span class="swatch-dot" style="background:${c.hex}"></span>`).join('')}</div>
       <div class="price-row">
         <span class="price">${fmt(p.price)}</span>
         ${p.oldPrice ? `<span class="price-old">${fmt(p.oldPrice)}</span>` : ''}
       </div>
       <div class="card-actions">
-        <button class="btn-sm" onclick="quickAdd(${pid})">Add to Cart</button>
-        <button class="btn-sm solid" onclick="quickBuy(${pid})">Buy Now</button>
+        <button class="btn-sm product-add" type="button">Add to Cart</button>
+        <button class="btn-sm solid product-buy" type="button">Buy Now</button>
       </div>
     </div>
   </div>`;
+}
+
+function bindProductCardEvents(){
+  document.querySelectorAll('.product-card-bound').forEach(el=>el.classList.remove('product-card-bound'));
+  document.querySelectorAll('.card[data-product-id]').forEach(card=>{
+    const id = card.getAttribute('data-product-id');
+    const openEls = card.querySelectorAll('.product-open');
+    openEls.forEach(el=>el.addEventListener('click', ()=>openProduct(id)));
+    const wish = card.querySelector('.product-wish');
+    if(wish) wish.addEventListener('click', e=>{ e.stopPropagation(); toggleWish(id, wish); });
+    const add = card.querySelector('.product-add');
+    if(add) add.addEventListener('click', e=>{ e.stopPropagation(); quickAdd(id); });
+    const buy = card.querySelector('.product-buy');
+    if(buy) buy.addEventListener('click', e=>{ e.stopPropagation(); quickBuy(id); });
+    card.classList.add('product-card-bound');
+  });
 }
 
 function renderHome(){
@@ -883,13 +891,15 @@ function renderHome(){
   document.getElementById('bestGrid').innerHTML = products.filter(p=>p.tag==="Best Seller").concat(products.slice(0,2)).slice(0,4).map(productCard).join('');
   document.getElementById('catGrid').innerHTML = categories.map(c=>`
     <div class="cat-card" onclick="showView('shop')">
-      <img src="${c.img}" alt="${c.name}" onerror="imgFallback(this)">
+      <img src="${c.img}" alt="${c.name}" onerror="window.imgFallback(this)">
       <div class="cat-overlay"><span>${c.name}</span></div>
     </div>`).join('');
+  bindProductCardEvents();
 }
 
 function renderShop(){
   document.getElementById('shopGrid').innerHTML = products.map(productCard).join('');
+  bindProductCardEvents();
 }
 
 function toggleWish(id, btn){
@@ -952,7 +962,7 @@ function renderDrawer(){
   footEl.style.display='block';
   itemsEl.innerHTML = cart.map((i,idx)=>`
     <div class="drawer-item">
-      <img src="${i.img}" alt="${i.name}" onerror="imgFallback(this)">
+      <img src="${i.img}" alt="${i.name}" onerror="window.imgFallback(this)">
       <div style="flex:1;">
         <div class="di-title">${i.name}</div>
         <div class="di-sub">${i.size} · ${i.color}</div>
@@ -985,7 +995,7 @@ function renderCartPage(){
       <div>
         ${cart.map((i,idx)=>`
           <div class="cart-row">
-            <img src="${i.img}" alt="${i.name}" onerror="imgFallback(this)">
+            <img src="${i.img}" alt="${i.name}" onerror="window.imgFallback(this)">
             <div>
               <div class="ct-name">${i.name}</div>
               <div class="ct-sub">${i.size} · ${i.color}</div>
@@ -1016,10 +1026,10 @@ function cartPageQty(idx, delta){ cart[idx].qty += delta; if(cart[idx].qty<=0) c
 function removeCartItem(idx){ cart.splice(idx,1); refreshCartUI(); }
 
 function renderCheckout(){
-  const shipping = cart.length===0 ? 0 : (cartSubtotal() >= 10000 ? 0 : 150);
+  const shipping = cart.length===0 ? 0 : (cartSubtotal() >= 10000 ? 0 : 250);
   document.getElementById('checkoutItems').innerHTML = cart.map(i=>`
     <div class="order-item-mini">
-      <img src="${i.img}" alt="${i.name}" onerror="imgFallback(this)">
+      <img src="${i.img}" alt="${i.name}" onerror="window.imgFallback(this)">
       <div>${i.name}<br><span style="color:var(--ink-soft);">${i.size} · ${i.color} × ${i.qty}</span></div>
       <div class="oim-price">${fmt(i.price*i.qty)}</div>
     </div>`).join('') || '<p style="color:var(--ink-soft); font-size:13px;">No items yet.</p>';
@@ -1056,7 +1066,7 @@ function renderProductDetail(){
   document.getElementById('pdQty').textContent = pdQtyVal;
 
   document.getElementById('pdThumbs').innerHTML = [p.img, p.img, p.img].map((im,idx)=>
-    `<img class="pd-thumb ${idx===0?'active':''}" src="${im}" onerror="imgFallback(this)" onclick="this.parentNode.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active'); document.getElementById('pdMainImg').src='${im}';">`
+    `<img class="pd-thumb ${idx===0?'active':''}" src="${im}" onerror="window.imgFallback(this)" onclick="this.parentNode.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active'); document.getElementById('pdMainImg').src='${im}';">`
   ).join('');
 
   const sizes = ["Standard (4m)", "Extended (5.5m)"];
@@ -1066,9 +1076,10 @@ function renderProductDetail(){
 
   document.getElementById('pdColors').innerHTML = colors.map((c,idx)=>
     `<span class="color-chip ${idx===0?'active':''}" style="background:${c.hex}" title="${c.name}" onclick="pdSelectColor(${idx}, this)"></span>`
-  ).join('') + `<span class="color-name" id="pdColorName">${p.colors[0].name}</span>`;
+  ).join('') + `<span class="color-name" id="pdColorName">${colors[0].name}</span>`;
 
   document.getElementById('relatedGrid').innerHTML = products.filter(x=>x.id!==p.id).slice(0,4).map(productCard).join('');
+  bindProductCardEvents();
   window.scrollTo({top:0, behavior:'instant'});
 }
 
@@ -1227,7 +1238,7 @@ function renderConfirmation(){
     <div style="display:flex; justify-content:space-between; margin-bottom:14px; color:var(--ink-soft); font-size:13px;"><span>Date</span><span>${lastOrder.date}</span></div>
     ${lastOrder.items.map(i=>`
       <div class="order-item-mini">
-        <img src="${i.img}" alt="${i.name}" onerror="imgFallback(this)">
+        <img src="${i.img}" alt="${i.name}" onerror="window.imgFallback(this)">
         <div>${i.name}<br><span style="color:var(--ink-soft);">${i.size} · ${i.color} × ${i.qty}</span></div>
         <div class="oim-price">${fmt(i.price*i.qty)}</div>
       </div>`).join('')}
