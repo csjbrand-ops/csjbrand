@@ -822,37 +822,56 @@ let pdQtyVal = 1;
 /* ---------------- Rendering helpers ---------------- */
 function fmt(n){ return "Rs. " + n.toLocaleString(); }
 
-// Shows a clean placeholder instead of a broken-image icon if a photo fails to load.
-const FALLBACK_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(`
-  <svg xmlns='http://www.w3.org/2000/svg' width='400' height='480'>
-    <rect width='100%' height='100%' fill='#f1eadb'/>
-    <text x='50%' y='48%' font-family='sans-serif' font-size='16' fill='#8f6220' text-anchor='middle'>CSJ</text>
-    <text x='50%' y='56%' font-family='sans-serif' font-size='11' fill='#6b6154' text-anchor='middle'>Image unavailable</text>
+// Global image fallback.
+// Use window.* so inline HTML onerror="imgFallback(this)" can always find it.
+window.FALLBACK_IMG = "data:image/svg+xml;utf8," + encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" width="400" height="480">
+    <rect width="100%" height="100%" fill="#f1eadb"/>
+    <text x="50%" y="48%" font-family="sans-serif" font-size="16" fill="#8f6220" text-anchor="middle">CSJ</text>
+    <text x="50%" y="56%" font-family="sans-serif" font-size="11" fill="#6b6154" text-anchor="middle">Image unavailable</text>
   </svg>`);
-function imgFallback(el){ el.onerror = null; el.src = FALLBACK_IMG; }
+
+window.imgFallback = function(el){
+  if(!el) return;
+  el.onerror = null;
+  el.src = window.FALLBACK_IMG;
+};
+
+function getProductById(id){
+  return products.find(x => String(x.id) === String(id));
+}
+
+function safeColors(product){
+  return (product && Array.isArray(product.colors) && product.colors.length)
+    ? product.colors
+    : [{name:"Standard", hex:"#b7a58c"}];
+}
 
 function productCard(p){
-  const wished = wishlist.has(p.id);
+  if(!p) return '';
+  const wished = wishlist.has(String(p.id));
+  const pid = JSON.stringify(p.id);
+  const colors = safeColors(p);
   return `
   <div class="card">
-    <div class="card-media" onclick="openProduct(${p.id})">
+    <div class="card-media" onclick="openProduct(${pid})">
       <img src="${p.img}" alt="${p.name}" onerror="imgFallback(this)">
       ${p.tag ? `<div class="card-tag">${p.tag}</div>` : ''}
-      <button class="wish-btn ${wished?'active':''}" onclick="event.stopPropagation(); toggleWish(${p.id}, this)">
+      <button class="wish-btn ${wished?'active':''}" onclick="event.stopPropagation(); toggleWish(${pid}, this)">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.8-10-9.5C0.3 7.8 2.5 4 6.2 4c2.1 0 3.7 1.2 4.8 2.9C12.1 5.2 13.7 4 15.8 4 19.5 4 21.7 7.8 20 11.5 19.5 15.7 12 21 12 21z"/></svg>
       </button>
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
-      <div class="card-title" onclick="openProduct(${p.id})">${p.name}</div>
-      <div class="swatch-row">${p.colors.map(c=>`<span class="swatch-dot" style="background:${c.hex}"></span>`).join('')}</div>
+      <div class="card-title" onclick="openProduct(${pid})">${p.name}</div>
+      <div class="swatch-row">${colors.map(c=>`<span class="swatch-dot" style="background:${c.hex}"></span>`).join('')}</div>
       <div class="price-row">
         <span class="price">${fmt(p.price)}</span>
         ${p.oldPrice ? `<span class="price-old">${fmt(p.oldPrice)}</span>` : ''}
       </div>
       <div class="card-actions">
-        <button class="btn-sm" onclick="quickAdd(${p.id})">Add to Cart</button>
-        <button class="btn-sm solid" onclick="quickBuy(${p.id})">Buy Now</button>
+        <button class="btn-sm" onclick="quickAdd(${pid})">Add to Cart</button>
+        <button class="btn-sm solid" onclick="quickBuy(${pid})">Buy Now</button>
       </div>
     </div>
   </div>`;
@@ -874,8 +893,9 @@ function renderShop(){
 }
 
 function toggleWish(id, btn){
-  if(wishlist.has(id)){ wishlist.delete(id); btn.classList.remove('active'); }
-  else { wishlist.add(id); btn.classList.add('active'); }
+  const key = String(id);
+  if(wishlist.has(key)){ wishlist.delete(key); btn.classList.remove('active'); }
+  else { wishlist.add(key); btn.classList.add('active'); }
 }
 
 /* ---------------- Cart logic ---------------- */
@@ -889,13 +909,26 @@ function addItem(product, size, color, qty){
 }
 
 function quickAdd(id){
-  const p = products.find(x=>x.id===id);
-  addItem(p, "Standard (4m)", p.colors[0].name, 1);
+  const p = getProductById(id);
+  if(!p){
+    console.error("Product not found:", id, products);
+    alert("Product could not be loaded. Please refresh the page.");
+    return;
+  }
+  const colors = safeColors(p);
+  addItem(p, "Standard (4m)", colors[0].name, 1);
   flashDrawer();
 }
+
 function quickBuy(id){
-  const p = products.find(x=>x.id===id);
-  addItem(p, "Standard (4m)", p.colors[0].name, 1);
+  const p = getProductById(id);
+  if(!p){
+    console.error("Product not found:", id, products);
+    alert("Product could not be loaded. Please refresh the page.");
+    return;
+  }
+  const colors = safeColors(p);
+  addItem(p, "Standard (4m)", colors[0].name, 1);
   showView('checkout');
 }
 
@@ -997,14 +1030,22 @@ function renderCheckout(){
 
 /* ---------------- Product detail ---------------- */
 function openProduct(id){
-  currentProduct = products.find(p=>p.id===id);
-  pdSelectedColorIdx = 0; pdQtyVal = 1;
+  currentProduct = getProductById(id);
+  if(!currentProduct){
+    console.error("Product not found:", id, products);
+    alert("Product could not be loaded. Please refresh the page.");
+    return;
+  }
+  pdSelectedColorIdx = 0;
+  pdQtyVal = 1;
   renderProductDetail();
   showView('product');
 }
 
 function renderProductDetail(){
   const p = currentProduct;
+  if(!p) return;
+  const colors = safeColors(p);
   document.getElementById('pdBreadName').textContent = p.name;
   document.getElementById('pdMainImg').src = p.img;
   document.getElementById('pdCat').textContent = p.cat + " Quality";
@@ -1015,7 +1056,7 @@ function renderProductDetail(){
   document.getElementById('pdQty').textContent = pdQtyVal;
 
   document.getElementById('pdThumbs').innerHTML = [p.img, p.img, p.img].map((im,idx)=>
-    `<img class="pd-thumb ${idx===0?'active':''}" src="${im}" onclick="this.parentNode.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active'); document.getElementById('pdMainImg').src='${im}';">`
+    `<img class="pd-thumb ${idx===0?'active':''}" src="${im}" onerror="imgFallback(this)" onclick="this.parentNode.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active')); this.classList.add('active'); document.getElementById('pdMainImg').src='${im}';">`
   ).join('');
 
   const sizes = ["Standard (4m)", "Extended (5.5m)"];
@@ -1023,7 +1064,7 @@ function renderProductDetail(){
     `<div class="size-chip ${idx===0?'active':''}" onclick="pdSelectSize(this)">${s}</div>`
   ).join('');
 
-  document.getElementById('pdColors').innerHTML = p.colors.map((c,idx)=>
+  document.getElementById('pdColors').innerHTML = colors.map((c,idx)=>
     `<span class="color-chip ${idx===0?'active':''}" style="background:${c.hex}" title="${c.name}" onclick="pdSelectColor(${idx}, this)"></span>`
   ).join('') + `<span class="color-name" id="pdColorName">${p.colors[0].name}</span>`;
 
@@ -1039,7 +1080,9 @@ function pdSelectColor(idx, el){
   pdSelectedColorIdx = idx;
   el.parentNode.querySelectorAll('.color-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('pdColorName').textContent = currentProduct.colors[idx].name;
+  const colors = safeColors(currentProduct);
+  pdSelectedColorIdx = Math.min(idx, colors.length - 1);
+  document.getElementById('pdColorName').textContent = colors[pdSelectedColorIdx].name;
 }
 function pdChangeQty(delta){
   pdQtyVal = Math.max(1, pdQtyVal+delta);
@@ -1047,7 +1090,8 @@ function pdChangeQty(delta){
 }
 function pdAddToCart(){
   const size = document.querySelector('#pdSizes .size-chip.active').textContent;
-  const color = currentProduct.colors[pdSelectedColorIdx].name;
+  const colors = safeColors(currentProduct);
+  const color = colors[Math.min(pdSelectedColorIdx, colors.length - 1)].name;
   addItem(currentProduct, size, color, pdQtyVal);
   flashDrawer();
 }
@@ -1222,7 +1266,16 @@ function scrollToFooter(){ document.getElementById('siteFooter').scrollIntoView(
 function normalizeColors(colors){
   if(!colors) return [{name:'Standard', hex:'#b7a58c'}];
   const arr = Array.isArray(colors) ? colors : String(colors).split(',');
-  return arr.map(c=> (typeof c === 'object' && c.hex) ? c : ({ name: (typeof c === 'object' ? c.name : c).trim(), hex:'#b7a58c' }));
+  const cleaned = arr.map(c=>{
+    if(c && typeof c === 'object'){
+      return {
+        name: String(c.name || 'Standard').trim(),
+        hex: c.hex || '#b7a58c'
+      };
+    }
+    return {name:String(c || 'Standard').trim(), hex:'#b7a58c'};
+  }).filter(c=>c.name);
+  return cleaned.length ? cleaned : [{name:'Standard', hex:'#b7a58c'}];
 }
 
 async function loadFromFirestore(){
@@ -1244,7 +1297,9 @@ async function loadFromFirestore(){
       snap.forEach(doc=>{
         const d = doc.data();
         loaded.push({
-          id: doc.id,
+          id: (d.id !== undefined && d.id !== null && String(d.id).trim() !== '')
+            ? d.id
+            : doc.id,
           name: d.name || 'Unnamed',
           price: Number(d.price)||0,
           oldPrice: d.oldPrice ? Number(d.oldPrice) : null,
