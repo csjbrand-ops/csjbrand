@@ -4,6 +4,7 @@
 <script>
 window.FALLBACK_IMG = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="480"><rect width="100%" height="100%" fill="#f1eadb"/><text x="50%" y="48%" font-family="sans-serif" font-size="16" fill="#8f6220" text-anchor="middle">CSJ</text><text x="50%" y="56%" font-family="sans-serif" font-size="11" fill="#6b6154" text-anchor="middle">Image unavailable</text></svg>');
 window.imgFallback = function(el){ if(!el) return; el.onerror=null; el.src=window.FALLBACK_IMG; };
+if (typeof window.imgFallback !== "function") { window.imgFallback = function(el){ if(el){ el.onerror=null; el.src=window.FALLBACK_IMG; } }; }
 var imgFallback = window.imgFallback;
 </script>
 
@@ -841,7 +842,7 @@ function safeColors(product){
 function productCard(p){
   if(!p) return '';
   const wished = wishlist.has(String(p.id));
-  const pid = JSON.stringify(p.id);
+  const pid = JSON.stringify(p.id).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
   const colors = safeColors(p);
   return `
   <div class="card">
