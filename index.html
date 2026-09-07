@@ -842,31 +842,47 @@ function safeColors(product){
 function productCard(p){
   if(!p) return '';
   const wished = wishlist.has(String(p.id));
-  const pid = JSON.stringify(p.id).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+  const safeId = String(p.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const colors = safeColors(p);
   return `
-  <div class="card">
-    <div class="card-media" onclick="openProduct(${pid})">
+  <div class="card" data-product-id="${safeId}">
+    <div class="card-media product-open">
       <img src="${p.img}" alt="${p.name}" onerror="window.imgFallback(this)">
       ${p.tag ? `<div class="card-tag">${p.tag}</div>` : ''}
-      <button class="wish-btn ${wished?'active':''}" onclick="event.stopPropagation(); toggleWish(${pid}, this)">
+      <button class="wish-btn ${wished?'active':''} product-wish" type="button">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.8-10-9.5C0.3 7.8 2.5 4 6.2 4c2.1 0 3.7 1.2 4.8 2.9C12.1 5.2 13.7 4 15.8 4 19.5 4 21.7 7.8 20 11.5 19.5 15.7 12 21 12 21z"/></svg>
       </button>
     </div>
     <div class="card-body">
       <div class="card-cat">${p.cat}</div>
-      <div class="card-title" onclick="openProduct(${pid})">${p.name}</div>
+      <div class="card-title product-open">${p.name}</div>
       <div class="swatch-row">${colors.map(c=>`<span class="swatch-dot" style="background:${c.hex}"></span>`).join('')}</div>
       <div class="price-row">
         <span class="price">${fmt(p.price)}</span>
         ${p.oldPrice ? `<span class="price-old">${fmt(p.oldPrice)}</span>` : ''}
       </div>
       <div class="card-actions">
-        <button class="btn-sm" onclick="quickAdd(${pid})">Add to Cart</button>
-        <button class="btn-sm solid" onclick="quickBuy(${pid})">Buy Now</button>
+        <button class="btn-sm product-add" type="button">Add to Cart</button>
+        <button class="btn-sm solid product-buy" type="button">Buy Now</button>
       </div>
     </div>
   </div>`;
+}
+
+function bindProductCardEvents(){
+  document.querySelectorAll('.product-card-bound').forEach(el=>el.classList.remove('product-card-bound'));
+  document.querySelectorAll('.card[data-product-id]').forEach(card=>{
+    const id = card.getAttribute('data-product-id');
+    const openEls = card.querySelectorAll('.product-open');
+    openEls.forEach(el=>el.addEventListener('click', ()=>openProduct(id)));
+    const wish = card.querySelector('.product-wish');
+    if(wish) wish.addEventListener('click', e=>{ e.stopPropagation(); toggleWish(id, wish); });
+    const add = card.querySelector('.product-add');
+    if(add) add.addEventListener('click', e=>{ e.stopPropagation(); quickAdd(id); });
+    const buy = card.querySelector('.product-buy');
+    if(buy) buy.addEventListener('click', e=>{ e.stopPropagation(); quickBuy(id); });
+    card.classList.add('product-card-bound');
+  });
 }
 
 function renderHome(){
@@ -878,10 +894,12 @@ function renderHome(){
       <img src="${c.img}" alt="${c.name}" onerror="window.imgFallback(this)">
       <div class="cat-overlay"><span>${c.name}</span></div>
     </div>`).join('');
+  bindProductCardEvents();
 }
 
 function renderShop(){
   document.getElementById('shopGrid').innerHTML = products.map(productCard).join('');
+  bindProductCardEvents();
 }
 
 function toggleWish(id, btn){
@@ -1061,6 +1079,7 @@ function renderProductDetail(){
   ).join('') + `<span class="color-name" id="pdColorName">${colors[0].name}</span>`;
 
   document.getElementById('relatedGrid').innerHTML = products.filter(x=>x.id!==p.id).slice(0,4).map(productCard).join('');
+  bindProductCardEvents();
   window.scrollTo({top:0, behavior:'instant'});
 }
 
