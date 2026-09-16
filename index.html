@@ -675,51 +675,232 @@ body{
 </style>
 
 <style id="mj-elite-inspired-design">
-/* MJ Elite-inspired premium storefront polish — design only */
-#view-home{background:transparent!important;}
-#view-home .hero{max-width:1280px;min-height:620px;align-items:center;padding:72px 40px 82px;gap:70px;}
-#view-home .hero-copy{max-width:560px;}
-#view-home .hero-copy h1{font-size:clamp(44px,5.2vw,68px);letter-spacing:-.035em;font-weight:800;}
-#view-home .hero-copy p{font-size:15px;max-width:520px;}
-#view-home .hero-frame{padding:8px;border:1px solid rgba(38,32,26,.12);box-shadow:0 24px 60px rgba(38,32,26,.14);}
-#view-home .hero-frame img{height:520px;}
-#view-home .hero-ribbon{background:rgba(38,32,26,.88);letter-spacing:.08em;}
-#view-home .btn-gold{background:var(--ink);border-color:var(--ink);}
-#view-home .btn-gold:hover{background:var(--gold-dark);border-color:var(--gold-dark);}
-#view-home .badges{max-width:1240px;margin:0 auto 70px;border:1px solid rgba(38,32,26,.10);background:rgba(255,255,255,.82);}
-#view-home .section-head{margin-bottom:34px;}
-#view-home .section-head > div::before{width:2px;background:var(--ink);}
-#view-home .section-head h2{font-size:34px;letter-spacing:-.025em;}
-#view-home .section-head p{font-size:14px;}
-#view-home .grid{gap:24px;}
-#view-home .card{border:1px solid rgba(38,32,26,.10);border-radius:0;background:rgba(255,255,255,.96);box-shadow:0 8px 28px rgba(38,32,26,.06);}
-#view-home .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(38,32,26,.12);}
-#view-home .card-media{height:300px;background:#f5f1e8;}
-#view-home .card-body{padding:19px 18px 20px;}
-#view-home .card-title{font-size:15px;font-weight:700;}
-#view-home .price{font-size:15px;}
-#view-home .cat-grid{gap:24px;}
-#view-home .cat-card{height:270px;border-radius:0;box-shadow:0 12px 32px rgba(38,32,26,.09);}
-#view-home .cat-overlay{padding:22px;background:linear-gradient(to top,rgba(20,17,13,.82),rgba(20,17,13,.02) 70%);}
-#view-home .cat-overlay span{font-size:21px;font-weight:700;}
-#view-home .about-section{border-top:1px solid rgba(38,32,26,.08);border-bottom:1px solid rgba(38,32,26,.08);}
-#view-home .about-grid{gap:64px;}
-#view-home .about-grid img{box-shadow:0 18px 45px rgba(38,32,26,.12);}
-#view-home .review-card{border-radius:0;background:rgba(255,255,255,.95);}
-#view-home .reviews-section{padding-top:78px;padding-bottom:78px;}
+/* =========================================================
+   CSJ HOMEPAGE — MJ Elite inspired redesign
+   VISUAL ONLY. No JavaScript, Firebase, admin panel, product
+   data or element IDs were changed by this stylesheet.
+   ========================================================= */
+
+body{
+  --mj-gold:#b08d57;
+  --mj-gold-deep:#8d6d3c;
+  --mj-night:#171310;
+  --mj-cream:#faf7f1;
+  background-image:none !important;
+  background-color:var(--mj-cream) !important;
+}
+html{background:var(--mj-cream);}
+
+/* ---------- Header polish ---------- */
+header{background:rgba(255,255,255,.95); border-bottom:1px solid rgba(23,19,16,.10);}
+.brand-tag{color:var(--mj-gold-deep);}
+nav.main-nav{gap:26px;}
+nav.main-nav a{font-size:12.5px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;}
+nav.main-nav a:hover, nav.main-nav a.active{color:var(--mj-gold-deep);}
+.promo{background:var(--mj-night); letter-spacing:.09em;}
+
+/* ---------- Home canvas ---------- */
+#view-home{background:var(--mj-cream) !important;}
+#view-home section.wrap{background:transparent; padding:76px 24px;}
+#view-home .eyebrow{color:var(--mj-gold-deep); letter-spacing:.22em;}
+
+/* ---------- Full-bleed hero ---------- */
+#view-home .mj-hero{
+  position:relative; width:100%; min-height:640px;
+  display:flex; align-items:center; overflow:hidden;
+  background:var(--mj-night);
+}
+#view-home .mj-hero img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+}
+#view-home .mj-hero-veil{
+  position:absolute; inset:0;
+  background:linear-gradient(100deg, rgba(14,11,9,.88) 0%, rgba(14,11,9,.62) 46%, rgba(14,11,9,.20) 100%);
+}
+#view-home .mj-hero-inner{
+  position:relative; z-index:2; width:100%;
+  max-width:1200px; margin:0 auto; padding:120px 24px 128px; color:#fff;
+}
+#view-home .mj-hero-eyebrow{color:var(--mj-gold); display:block; margin-bottom:18px;}
+#view-home .mj-hero h1{
+  font-size:clamp(40px,5.4vw,66px); line-height:1.05; font-weight:700;
+  letter-spacing:-.02em; color:#fff; max-width:14ch; margin-bottom:20px;
+}
+#view-home .mj-hero p{
+  color:rgba(255,255,255,.82); font-size:16px; line-height:1.8;
+  max-width:52ch; margin-bottom:34px;
+}
+#view-home .mj-hero .btn-row{gap:14px;}
+#view-home .btn{border-radius:0;}
+#view-home .btn-gold{
+  background:var(--mj-gold); border:1px solid var(--mj-gold); color:#fff; min-width:178px;
+}
+#view-home .btn-gold:hover{background:var(--mj-gold-deep); border-color:var(--mj-gold-deep);}
+#view-home .btn-ghost{
+  background:transparent; border:1px solid rgba(255,255,255,.65); color:#fff;
+  min-width:150px; transition:background .18s, color .18s, border-color .18s;
+}
+#view-home .btn-ghost:hover{background:#fff; border-color:#fff; color:var(--mj-night);}
+
+/* ---------- Trust strip (lifted over the hero) ---------- */
+#view-home .badges{
+  position:relative; z-index:5; margin:-46px 0 0;
+  background:#fff !important; border:1px solid rgba(23,19,16,.09);
+  border-radius:0; box-shadow:0 18px 44px rgba(23,19,16,.10);
+}
+#view-home .badge-item{
+  border-right:1px solid rgba(23,19,16,.08); min-height:92px; padding:22px 18px;
+}
+#view-home .badge-item .bi-title{font-size:13px; letter-spacing:.02em;}
+#view-home .badge-item .bi-sub{font-size:11.5px; line-height:1.5;}
+
+/* ---------- Section headings: centred, MJ style ---------- */
+#view-home .section-head{
+  flex-direction:column; align-items:center; text-align:center;
+  gap:10px; margin-bottom:42px;
+}
+#view-home .section-head > div{padding-left:0;}
+#view-home .section-head > div::before{display:none;}
+#view-home .section-head h2{
+  font-size:clamp(27px,3.2vw,36px); letter-spacing:-.02em; margin-top:10px;
+}
+#view-home .section-head h2::after{
+  content:""; display:block; width:52px; height:2px;
+  background:var(--mj-gold); margin:16px auto 0;
+}
+#view-home .section-head p{font-size:14px; color:var(--ink-soft); max-width:52ch;}
+#view-home .view-all{
+  color:var(--mj-gold-deep); border-bottom:1px solid var(--mj-gold);
+  padding-bottom:3px; letter-spacing:.14em;
+}
+
+/* ---------- Collection tiles ---------- */
+#view-home .mj-collections{padding-top:84px;}
+#view-home .cat-grid{gap:20px;}
+#view-home .cat-card{
+  height:330px; border:none; border-radius:0; box-shadow:0 14px 34px rgba(23,19,16,.10);
+}
+#view-home .cat-card img{transition:transform .6s ease;}
+#view-home .cat-card:hover img{transform:scale(1.05);}
+#view-home .cat-overlay{
+  padding:24px; align-items:flex-end;
+  background:linear-gradient(to top, rgba(14,11,9,.86), rgba(14,11,9,.06) 62%);
+}
+#view-home .cat-overlay span{
+  font-size:20px; font-weight:700; line-height:1.25;
+  border-bottom:2px solid var(--mj-gold); padding-bottom:7px;
+}
+
+/* ---------- Product cards ---------- */
+#view-home .grid{gap:22px;}
+#view-home .card{
+  background:#fff !important; border:1px solid rgba(23,19,16,.08);
+  border-radius:0; box-shadow:none; transition:box-shadow .25s, transform .25s, border-color .25s;
+}
+#view-home .card:hover{
+  transform:translateY(-4px); border-color:rgba(176,141,87,.45);
+  box-shadow:0 18px 38px rgba(23,19,16,.12);
+}
+#view-home .card-media{height:330px; background:#f3efe7;}
+#view-home .card-tag{
+  background:var(--mj-gold); color:#fff; font-size:9.5px; letter-spacing:.12em; padding:5px 10px;
+}
+#view-home .card-body{padding:18px 18px 20px; gap:7px; text-align:center; align-items:center;}
+#view-home .card-cat{color:var(--mj-gold-deep); font-size:9.5px; letter-spacing:.16em;}
+#view-home .card-title{font-size:15px; font-weight:600; line-height:1.4;}
+#view-home .card-title:hover{color:var(--mj-gold-deep);}
+#view-home .swatch-row{justify-content:center;}
+#view-home .price-row{justify-content:center;}
+#view-home .price{font-size:16px; color:var(--mj-night);}
+#view-home .card-actions{width:100%; padding-top:12px;}
+#view-home .btn-sm{
+  min-height:40px; border-color:rgba(23,19,16,.35); letter-spacing:.08em; font-size:10.5px;
+}
+#view-home .btn-sm.solid{background:var(--mj-night); border-color:var(--mj-night);}
+#view-home .btn-sm:hover{background:var(--mj-gold); border-color:var(--mj-gold); color:#fff;}
+
+/* ---------- Full-width promo band ---------- */
+#view-home .mj-band{
+  position:relative; padding:0; margin:14px 0 0;
+  background-color:var(--mj-night);
+  background-image:linear-gradient(rgba(14,11,9,.72), rgba(14,11,9,.72)), url("images/client-bg.jpg");
+  background-size:cover; background-position:center; background-repeat:no-repeat;
+}
+#view-home .mj-band-inner{
+  max-width:760px; margin:0 auto; padding:96px 24px; text-align:center; color:#fff;
+}
+#view-home .mj-band-inner h2{
+  font-size:clamp(28px,3.4vw,40px); line-height:1.15; color:#fff; margin:14px 0 14px;
+}
+#view-home .mj-band-inner p{
+  color:rgba(255,255,255,.80); font-size:15px; line-height:1.8; margin-bottom:30px;
+}
+
+/* ---------- About ---------- */
+#view-home .about-section{
+  background:#fff !important;
+  border-top:1px solid rgba(23,19,16,.08); border-bottom:1px solid rgba(23,19,16,.08);
+}
+#view-home .about-grid{gap:64px; padding:80px 24px;}
+#view-home .about-grid img{
+  height:460px; border:none; border-radius:0; box-shadow:0 22px 50px rgba(23,19,16,.16);
+}
+#view-home .about-copy h2{font-size:clamp(28px,3.3vw,38px); line-height:1.15; margin-bottom:18px;}
+#view-home .about-copy p{line-height:1.85; font-size:15px;}
+#view-home .quote-mark{border-left:2px solid var(--mj-gold); color:var(--mj-gold-deep);}
+#view-home .about-copy .btn-outline{border-color:var(--mj-night); min-width:210px;}
+#view-home .about-copy .btn-outline:hover{background:var(--mj-night); color:#fff;}
+
+/* ---------- Reviews ---------- */
+#view-home .reviews-section{
+  background:#f3efe6 !important; padding:82px 0;
+  border-top:1px solid rgba(23,19,16,.07); border-bottom:1px solid rgba(23,19,16,.07);
+}
 #view-home .reviews-grid{gap:22px;}
+#view-home .review-card{
+  background:#fff !important; border:1px solid rgba(23,19,16,.07);
+  border-radius:0; box-shadow:none; padding:30px 28px;
+}
+#view-home .review-card .stars{color:var(--mj-gold);}
+#view-home .review-card p{font-size:14px; line-height:1.85;}
+#view-home .review-card .reviewer{display:flex; align-items:center; gap:11px; font-weight:600;}
+#view-home .rv-avatar{
+  width:34px; height:34px; border-radius:50%; background:var(--mj-gold); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces', serif; font-size:15px; font-weight:700; flex-shrink:0;
+}
+
+/* ---------- Responsive ---------- */
 @media(max-width:960px){
- #view-home .hero{padding:55px 24px 65px;gap:40px;}
- #view-home .hero-frame img{height:430px;}
- #view-home .card-media{height:250px;}
+  #view-home .mj-hero{min-height:520px;}
+  #view-home .mj-hero-inner{padding:92px 24px 104px;}
+  #view-home .mj-hero h1{max-width:18ch;}
+  #view-home section.wrap{padding:62px 24px;}
+  #view-home .card-media{height:280px;}
+  #view-home .cat-card{height:250px;}
+  #view-home .about-grid{gap:38px; padding:62px 24px;}
+  #view-home .about-grid img{height:320px;}
+  #view-home .badge-item:nth-child(2){border-right:none;}
 }
 @media(max-width:560px){
- #view-home .hero{padding:38px 18px 48px;}
- #view-home .hero-copy h1{font-size:38px;}
- #view-home .hero-frame img{height:360px;}
- #view-home .card-media{height:215px;}
- #view-home .section-head h2{font-size:28px;}
- #view-home .cat-card{height:200px;}
+  #view-home .mj-hero{min-height:470px;}
+  #view-home .mj-hero-inner{padding:74px 20px 84px;}
+  #view-home .mj-hero h1{font-size:34px; max-width:16ch;}
+  #view-home .mj-hero p{font-size:14.5px;}
+  #view-home .mj-hero .btn-row .btn{flex:1 1 100%;}
+  #view-home .badges{margin-top:-28px;}
+  #view-home section.wrap{padding:52px 18px;}
+  #view-home .mj-collections{padding-top:56px;}
+  #view-home .card-media{height:225px;}
+  #view-home .cat-card{height:190px;}
+  #view-home .cat-overlay span{font-size:16px;}
+  #view-home .mj-band-inner{padding:68px 20px;}
+  #view-home .review-card{padding:24px 22px;}
+}
+@media(prefers-reduced-motion:reduce){
+  #view-home .card, #view-home .cat-card img{transition:none;}
+  #view-home .card:hover{transform:none;}
 }
 </style>
 </head>
@@ -760,19 +941,17 @@ body{
 <!-- ============ HOME VIEW ============ -->
 <div class="view active" id="view-home">
 
-  <div class="hero">
-    <div class="hero-copy">
-      <span class="eyebrow">CSJ · Chotty Shah Jee</span>
+  <div class="mj-hero">
+    <img id="heroImage" src="images/client-bg.jpg" alt="CSJ unstitched suiting collection" onerror="window.imgFallback(this)">
+    <div class="mj-hero-veil"></div>
+    <div class="mj-hero-inner">
+      <span class="eyebrow mj-hero-eyebrow">CSJ · Chotty Shah Jee</span>
       <h1 id="heroHeading">Fabric folded with intention.</h1>
       <p id="heroSubtitle">Premium unstitched suiting, boxed and banded the traditional way. Full length, honest colour, made for your tailor to cut exactly as you like.</p>
       <div class="btn-row">
-        <button class="btn btn-gold" onclick="showView('shop')">Shop New Arrivals</button>
-        <button class="btn btn-outline" onclick="scrollToAbout()">Our Story</button>
+        <button class="btn btn-gold" onclick="showView('shop')">Shop Now</button>
+        <button class="btn btn-ghost" onclick="scrollToAbout()">Our Story</button>
       </div>
-    </div>
-    <div class="hero-frame">
-      <img id="heroImage" src="images/csj-2.jpg" alt="CSJ unstitched suiting collection" onerror="window.imgFallback(this)">
-      <div class="hero-ribbon">CSJ · Signature Box</div>
     </div>
   </div>
 
@@ -785,27 +964,39 @@ body{
     </div>
   </div>
 
+  <section class="wrap mj-collections">
+    <div class="section-head">
+      <div><span class="eyebrow">The art of fine fabric</span><h2>Crafted for your finest moments</h2>
+      <p>Four collections, one standard — full length, honest colour, ready for your tailor.</p></div>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+  </section>
+
   <section class="wrap" id="featured">
     <div class="section-head">
-      <div><span class="eyebrow">Handpicked</span><h2>Featured Products</h2></div>
-      <span class="view-all" onclick="showView('shop')">View All →</span>
+      <div><span class="eyebrow">Handpicked</span><h2>Premium Collection</h2>
+      <p>Discover our finest selection of unstitched suiting.</p></div>
+      <span class="view-all" onclick="showView('shop')">View all</span>
     </div>
     <div class="grid" id="featuredGrid"></div>
   </section>
 
   <section class="wrap" id="newarrivals" style="padding-top:0;">
     <div class="section-head">
-      <div><span class="eyebrow">Just In</span><h2>New Arrivals</h2></div>
-      <span class="view-all" onclick="showView('shop')">View All →</span>
+      <div><span class="eyebrow">Just In</span><h2>New Arrivals</h2>
+      <p>The latest lengths to reach our shelf.</p></div>
+      <span class="view-all" onclick="showView('shop')">View all</span>
     </div>
     <div class="grid" id="newArrivalsGrid"></div>
   </section>
 
-  <section class="wrap">
-    <div class="section-head">
-      <div><span class="eyebrow">Browse</span><h2>Shop by Category</h2></div>
+  <section class="mj-band">
+    <div class="mj-band-inner">
+      <span class="eyebrow mj-hero-eyebrow">Signature Box</span>
+      <h2>Premium suiting, delivered all over Pakistan</h2>
+      <p>Full four-metre lengths, wrapped in tissue and banded before they leave our shelf.</p>
+      <button class="btn btn-gold" onclick="showView('shop')">Shop Best Sellers</button>
     </div>
-    <div class="cat-grid" id="catGrid"></div>
   </section>
 
   <section class="about-section" id="aboutSection">
@@ -824,8 +1015,9 @@ body{
 
   <section class="wrap">
     <div class="section-head">
-      <div><span class="eyebrow">Best Sellers</span><h2>Most Ordered</h2></div>
-      <span class="view-all" onclick="showView('shop')">View All →</span>
+      <div><span class="eyebrow">Best Sellers</span><h2>Most Ordered</h2>
+      <p>The colours our customers come back for.</p></div>
+      <span class="view-all" onclick="showView('shop')">View all</span>
     </div>
     <div class="grid" id="bestGrid"></div>
   </section>
@@ -833,23 +1025,24 @@ body{
   <section class="reviews-section">
     <div class="wrap">
       <div class="section-head" style="border-bottom:none; margin-bottom:30px;">
-        <div><span class="eyebrow">Customer Reviews</span><h2>What Our Customers Say</h2></div>
+        <div><span class="eyebrow">Customer Reviews</span><h2>What Our Customers Say</h2>
+        <p>Trusted by families across Pakistan.</p></div>
       </div>
       <div class="reviews-grid">
         <div class="review-card">
           <div class="stars">★★★★★</div>
           <p>"Fabric quality bilkul waisi hi thi jaisi photo mein dikhi. Delivery bhi time pe aa gayi, bohat khush hoon."</p>
-          <div class="reviewer">— Ahmed R., Lahore</div>
+          <div class="reviewer"><span class="rv-avatar">A</span>Ahmed R., Lahore</div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★★</div>
           <p>"Colour exact match tha aur packaging bhi premium lagi. Cash on delivery ka option bohat convenient hai."</p>
-          <div class="reviewer">— Bilal S., Karachi</div>
+          <div class="reviewer"><span class="rv-avatar">B</span>Bilal S., Karachi</div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★☆</div>
           <p>"Suit ka fabric soft aur breathable hai. WhatsApp pe order confirm karna bohat easy tha."</p>
-          <div class="reviewer">— Usman T., Faisalabad</div>
+          <div class="reviewer"><span class="rv-avatar">U</span>Usman T., Faisalabad</div>
         </div>
       </div>
     </div>
