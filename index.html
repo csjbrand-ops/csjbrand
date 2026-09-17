@@ -906,6 +906,83 @@ nav.main-nav a:hover, nav.main-nav a.active{color:var(--mj-gold-deep);}
   #view-home .card, #view-home .cat-card img{transition:none;}
   #view-home .card:hover{transform:none;}
 }
+
+/* =========================================================
+   PROFESSIONAL POLISH PASS \u2014 spacing rhythm, type scale,
+   micro-detail. Still visual only; no markup logic touched
+   except the badge icons/backdrop added right after </style>,
+   which are static and carry no functionality.
+   ========================================================= */
+#view-home{--mj-rule:rgba(23,19,16,.08);}
+
+/* Consistent vertical rhythm between sections */
+#view-home .mj-collections{padding-top:88px; padding-bottom:64px;}
+#view-home #featured{padding-top:64px; padding-bottom:64px;}
+#view-home #newarrivals{padding-top:0 !important; padding-bottom:88px;}
+#view-home .mj-band-inner{padding:104px 24px;}
+#view-home .about-grid{padding:96px 24px;}
+#view-home section.wrap:has(#bestGrid){padding-top:88px; padding-bottom:96px;}
+
+/* Type scale: consistent tracking + weight across all eyebrows/kickers */
+#view-home .eyebrow{font-size:11.5px; letter-spacing:.24em; font-weight:700;}
+#view-home .section-head h2{font-weight:700; letter-spacing:-.015em;}
+#view-home .section-head p{line-height:1.7; margin-top:10px;}
+#view-home .mj-hero h1{letter-spacing:-.025em;}
+#view-home .mj-hero p{letter-spacing:.002em;}
+
+/* "View all" link gets an arrow + lift, feels intentional not accidental */
+#view-home .view-all{display:inline-flex; align-items:center; gap:6px; transition:gap .2s, color .2s;}
+#view-home .view-all::after{content:"\2192"; font-size:13px; transition:transform .2s;}
+#view-home .view-all:hover{gap:9px; color:var(--mj-gold);}
+
+/* Badge strip: consistent icon + copy alignment, tighter rule lines */
+#view-home .badges{border:1px solid var(--mj-rule); border-top:none;}
+#view-home .badge-item{
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  border-right:1px solid var(--mj-rule);
+}
+#view-home .badge-item:last-child{border-right:none;}
+#view-home .badge-icon{
+  width:34px; height:34px; flex:none; border-radius:50%;
+  background:rgba(176,141,87,.10); color:var(--mj-gold-deep);
+  display:flex; align-items:center; justify-content:center;
+}
+#view-home .badge-icon svg{width:17px; height:17px;}
+#view-home .badge-item .bi-copy{text-align:left;}
+#view-home .badge-item .bi-title{font-size:13px; font-weight:700; letter-spacing:.01em; margin-bottom:2px;}
+#view-home .badge-item .bi-sub{font-size:11px; line-height:1.4;}
+
+/* Cards: tighten baseline alignment, consistent corner + shadow language */
+#view-home .card-body{padding:20px 18px 22px;}
+#view-home .card-title{letter-spacing:-.005em;}
+#view-home .price{letter-spacing:-.01em;}
+
+/* Collection tiles: sharper overlay + consistent label baseline */
+#view-home .cat-overlay{padding:26px 24px; align-items:flex-end;}
+#view-home .cat-overlay span{letter-spacing:-.01em;}
+
+/* About: align copy rhythm with the rest of the page */
+#view-home .about-copy .eyebrow{margin-bottom:10px; display:block;}
+#view-home .about-copy h2{letter-spacing:-.02em;}
+
+/* Reviews: consistent card padding + subtle lift on hover for polish */
+#view-home .review-card{transition:box-shadow .2s, transform .2s;}
+#view-home .review-card:hover{box-shadow:0 16px 34px rgba(23,19,16,.10); transform:translateY(-2px);}
+
+@media(max-width:960px){
+  #view-home .mj-collections{padding-top:56px; padding-bottom:44px;}
+  #view-home #featured{padding-top:44px; padding-bottom:44px;}
+  #view-home #newarrivals{padding-bottom:56px;}
+  #view-home .mj-band-inner{padding:76px 20px;}
+  #view-home section.wrap:has(#bestGrid){padding-top:56px; padding-bottom:64px;}
+  #view-home .badge-item{justify-content:flex-start; padding:20px 16px;}
+}
+@media(max-width:560px){
+  #view-home .badge-item{border-right:none; border-bottom:1px solid var(--mj-rule);}
+  #view-home .badge-item:last-child{border-bottom:none;}
+  #view-home .badge-icon{width:30px; height:30px;}
+  #view-home .badge-icon svg{width:15px; height:15px;}
+}
 </style>
 </head>
 <body>
@@ -961,10 +1038,22 @@ nav.main-nav a:hover, nav.main-nav a.active{color:var(--mj-gold-deep);}
 
   <div class="wrap">
     <div class="badges">
-      <div class="badge-item"><div class="bi-title">Free Delivery</div><div class="bi-sub">On orders over Rs. 10,000</div></div>
-      <div class="badge-item"><div class="bi-title">Fast Delivery</div><div class="bi-sub">All over Pakistan</div></div>
-      <div class="badge-item"><div class="bi-title">Advance Payment</div><div class="bi-sub">Full payment required to confirm</div></div>
-      <div class="badge-item"><div class="bi-title">Full Length</div><div class="bi-sub">4 metres in every box</div></div>
+      <div class="badge-item">
+        <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h3l3 3v4h-6"/><circle cx="6" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg></span>
+        <span class="bi-copy"><div class="bi-title">Free Delivery</div><div class="bi-sub">On orders over Rs. 10,000</div></span>
+      </div>
+      <div class="badge-item">
+        <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+        <span class="bi-copy"><div class="bi-title">Fast Delivery</div><div class="bi-sub">All over Pakistan</div></span>
+      </div>
+      <div class="badge-item">
+        <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+        <span class="bi-copy"><div class="bi-title">Advance Payment</div><div class="bi-sub">Full payment required to confirm</div></span>
+      </div>
+      <div class="badge-item">
+        <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
+        <span class="bi-copy"><div class="bi-title">Full Length</div><div class="bi-sub">4 metres in every box</div></span>
+      </div>
     </div>
   </div>
 
