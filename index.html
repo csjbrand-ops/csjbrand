@@ -965,6 +965,14 @@ nav.main-nav a:hover, nav.main-nav a.active{color:var(--gold);}
 #view-home .card-media{background:#241f19;}
 #view-home .btn-sm.solid{color:#fff !important;}
 </style>
+
+<style id="white-price-fix">
+.price,
+.price-old {
+  color: #ffffff !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -1356,31 +1364,31 @@ nav.main-nav a:hover, nav.main-nav a.active{color:var(--gold);}
    -- e.g. fetch('/api/products').then(r=>r.json()).then(data => products = data)
    ========================================================= */
 const products = [
-  { id:1, name:"Wine & Sky Duo", cat:"Premium", tag:"New", img:"images/csj-1.jpg", price:1650, oldPrice:null,
+  { id:1, name:"Wine & Sky Duo", cat:"Premium", tag:"New", img:"images/csj-1.jpg", price:1650, oldPrice:1950,
     colors:[{name:"Wine Maroon", hex:"#5c2027"},{name:"Sky Lavender", hex:"#b9c3e8"},{name:"Espresso Brown", hex:"#5a3a26"}],
     desc:"Soft-touch wash & wear suiting box — wine maroon, sky lavender and espresso brown in one set. Full unstitched length, ready for your tailor." },
-  { id:2, name:"Olive & Cream Set", cat:"Signature", tag:"Best Seller", img:"images/csj-2.jpg", price:1850, oldPrice:null,
+  { id:2, name:"Olive & Cream Set", cat:"Signature", tag:"Best Seller", img:"images/csj-2.jpg", price:1850, oldPrice:2250,
     colors:[{name:"Olive Green", hex:"#5a5a34"},{name:"Cream", hex:"#ecdcae"},{name:"Midnight Black", hex:"#17171a"},{name:"Sage Mint", hex:"#a9c2a0"}],
     desc:"Premium boxed set finished in tissue and satin band. Olive green with woven border, soft cream, jet black and fresh sage mint." },
-  { id:3, name:"Charcoal & Camel Duo", cat:"Premium", tag:"New", img:"images/csj-3.jpg", price:1850, oldPrice:null,
+  { id:3, name:"Charcoal & Camel Duo", cat:"Premium", tag:"New", img:"images/csj-3.jpg", price:1850, oldPrice:2250,
     colors:[{name:"Charcoal Grey", hex:"#4a4d52"},{name:"Camel Tan", hex:"#a9855c"}],
     desc:"Grace suiting finish in cool charcoal grey and warm camel tan. Smooth hand-feel, holds its shape through a long day." },
-  { id:4, name:"Beige, Navy & Rust Trio", cat:"Signature", tag:"New", img:"images/csj-4.jpg", price:1650, oldPrice:null,
+  { id:4, name:"Beige, Navy & Rust Trio", cat:"Signature", tag:"New", img:"images/csj-4.jpg", price:1650, oldPrice:1950,
     colors:[{name:"Warm Beige", hex:"#d6c7a8"},{name:"Deep Navy", hex:"#1f2b4a"},{name:"Rust Brown", hex:"#a35a2e"}],
     desc:"Three of our most-ordered tones together — warm beige, deep navy and rust brown, all with the same soft, breathable finish." },
-  { id:5, name:"Taupe & Sky Blue Duo", cat:"Premium", tag:null, img:"images/csj-5.jpg", price:1850, oldPrice:null,
+  { id:5, name:"Taupe & Sky Blue Duo", cat:"Premium", tag:null, img:"images/csj-5.jpg", price:1850, oldPrice:2250,
     colors:[{name:"Warm Taupe", hex:"#b7a58c"},{name:"Sky Blue", hex:"#a9c4d6"}],
     desc:"Nerm-o-Nazuk exclusive fabric — soft warm taupe and cool sky blue, comfortable enough for all-day wear." },
-  { id:6, name:"Wine & Sage Duo", cat:"Signature", tag:"Best Seller", img:"images/csj-6.jpg", price:1850, oldPrice:null,
+  { id:6, name:"Wine & Sage Duo", cat:"Signature", tag:"Best Seller", img:"images/csj-6.jpg", price:1850, oldPrice:2250,
     colors:[{name:"Deep Wine", hex:"#4a1f28"},{name:"Sage Grey", hex:"#a8ac9c"}],
     desc:"Deep wine and soft sage grey — a rich, versatile pairing that works for both everyday and formal wear." },
-  { id:7, name:"Olive & Blush Duo", cat:"Premium", tag:"New", img:"images/csj-7.jpg", price:1850, oldPrice:null,
+  { id:7, name:"Olive & Blush Duo", cat:"Premium", tag:"New", img:"images/csj-7.jpg", price:1850, oldPrice:2250,
     colors:[{name:"Royal Olive", hex:"#4a4a2e"},{name:"Dusty Blush", hex:"#d6a8a0"}],
     desc:"Royal suiting finish in deep olive and dusty blush pink — a striking, modern colour pairing." },
-  { id:8, name:"White, Navy & Taupe Trio", cat:"Value", tag:null, img:"images/csj-8.jpg", price:1650, oldPrice:null,
+  { id:8, name:"White, Navy & Taupe Trio", cat:"Value", tag:null, img:"images/csj-8.jpg", price:1650, oldPrice:1950,
     colors:[{name:"Pure White", hex:"#f5f4ef"},{name:"Navy Charcoal", hex:"#3d3d47"},{name:"Warm Taupe", hex:"#a89a7e"}],
     desc:"Crisp white, deep navy-charcoal and warm taupe — everyday premium cloth with a proper finish, great value." },
-  { id:9, name:"Mustard & Aubergine Duo", cat:"Value", tag:"New", img:"images/csj-9.jpg", price:1650, oldPrice:null,
+  { id:9, name:"Mustard & Aubergine Duo", cat:"Value", tag:"New", img:"images/csj-9.jpg", price:1650, oldPrice:1950,
     colors:[{name:"Mustard Gold", hex:"#c9821f"},{name:"Deep Aubergine", hex:"#3a1f2e"},{name:"Chocolate Brown", hex:"#4a2e1a"}],
     desc:"Bold mustard gold, deep aubergine and rich chocolate brown — a standout colourway for Jumma and festive wear." },
 ];
