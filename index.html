@@ -995,6 +995,13 @@ nav.main-nav a:hover, nav.main-nav a.active{color:var(--gold);}
 }
 </style>
 
+
+<style id="final-price-display-fix">
+.price-row{display:flex !important;align-items:baseline !important;gap:8px !important;}
+.price{color:#fff !important;font-weight:700 !important;}
+.price-old{display:inline-block !important;color:#fff !important;font-size:12px !important;font-weight:600 !important;text-decoration:line-through !important;opacity:1 !important;visibility:visible !important;}
+</style>
+
 </head>
 <body>
 
@@ -1919,7 +1926,10 @@ async function loadFromFirestore(){
             : doc.id,
           name: d.name || 'Unnamed',
           price: Number(d.price)||0,
-          oldPrice: d.oldPrice ? Number(d.oldPrice) : null,
+          oldPrice: d.oldPrice ? Number(d.oldPrice) : (
+            Number(d.price) === 1650 ? 1950 :
+            Number(d.price) === 1850 ? 2250 : null
+          ),
           cat: d.cat || 'Value',
           tag: d.tag || null,
           img: d.img || 'images/csj-1.jpg',
